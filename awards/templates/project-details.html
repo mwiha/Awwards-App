@@ -1,0 +1,162 @@
+{%extends 'base.html'%}
+{%load static%}
+
+{%block content%}
+<div class="ui four column grid" style="margin-top: 60px;">
+    <div class="two column row">
+      <div class="column"></div>
+      <div class="column"></div>
+    </div>
+    <div class="two wide column"></div>
+    <div class="eight wide column" style="background-image: url({{project.project_pic.url}});  
+    background-position:center; background-repeat: no-repeat; background-size: cover;
+    height:400px">
+
+    </div>
+    <div class="four wide column">
+
+        
+        <div class="ui items">
+            <div class="item">
+              <div class="content">
+                <a class="header">Ratings</a>
+                <div class="meta">
+                  {% if project.average == 0%}
+                  <p>This project has not been rated yet. Be the first to rate it.</p>
+                  {%endif%}
+                     <p><span>Design: </span><div name='design' class="ui rating disabled" data-rating="{{project.design|floatformat:'0'}}" data-max-rating="10" style="font-size: 20px;"></div></p>
+                    <p><span>Usability: </span><div name='usability' class="ui rating disabled" data-rating="{{project.usability|floatformat:'0'}}" data-max-rating="10" style="font-size: 20px;"></div></p>
+                    <p><span>Content: </span><div name='content' class="ui rating disabled" data-rating="{{project.content|floatformat:'0'}}" data-max-rating="10" style="font-size: 20px;" ></div></p>
+                    <p style="padding-top: 20px;"><span style="font-weight: bold; ">Average: </span><div name='average' class="ui star rating" data-rating="{{project.average|floatformat:'0'}}" data-max-rating="10" style="font-size: 20px;" ></div></p>
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 50px; margin-left: 50px;">
+          {%if not has_user_voted%}
+          <div>
+              <button class="test button ui secondary button">Rate this Project</button>
+          </div>
+          {%else%}
+          <div>
+              <p>You have Rated this project.</p>
+          </div>
+          {%endif%}
+        </div>
+
+    </div>
+
+
+    <div class="ui small modal">
+            <i class="close icon"></i>
+            <div class="header">
+              Rate Project: {{project.name}}
+              
+            </div>
+            <div class="content">
+              <div style="margin-left: 100px;">
+                  
+                  <form action="{%url 'ratings' project.id %}" method="POST" class="ui form">
+                      {%csrf_token%}
+                      <div class="field">
+                          <label>Design</label>
+                          <small>(overall appearance of the project)</small>
+                        <input type="range" name="design" id="design" min="1" max="10" style="margin-left:230px;">
+                      </div>
+                      <div class="field">
+                          <label>Usability</label>
+                          <small>(user experience and how responsive the project is)</small>
+                        <input type="range" name="usability" id="usability" min="1" max="10" style="margin-left:150px;">
+                      </div>
+                      <div class="field">
+                          <label>Content</label>
+                          <small>(technologies used, the font used, is it uniform throughout the project and grammar)</small>
+                        <input type="range" name="content" id="content" min="1" max="10">
+                      </div>
+                      <button class="ui secondary button" type="submit">Post Ratings</button>
+                      <span style="float: right; margin-top: 10px;">Once you have posted, you will not be allowed to change your ratings.</span>
+                  </form>
+              </div>
+            </div>
+            
+
+    </div>
+</div>
+<div class="ui grid">
+    <div class="two wide column"></div>
+    <div class="eight wide column">
+        <div class="ui items" >
+            <div class="item" style="padding-bottom: 10px;">
+              <div class="content">
+                <div class="header" style="font-size: 22px;">Name</div>
+                <div class="meta" style="font-size: 19px;">
+                  <span>{{project.name}}</span>
+                </div>
+                <div class="extra" style="font-size: 17px;">
+                  by: <a href="{% url 'profile' project.profile.user.username %}">{{project.profile.user.username}}</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="item" style="padding-bottom: 10px;">
+              <div class="content">
+                <div class="header" style="font-size: 22px;">Description</div>
+                <div class="meta" style="font-size: 19px;">
+                  <span>{{project.description}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="item" style="padding-bottom: 10px;">
+                <div class="content">
+                  <div class="header" style="font-size: 22px;">Live Link</div>
+                  <div class="meta" style="font-size: 19px;">
+                    <a href="{{project.link}}" target="_blank">{{project.link}}</a>
+                  </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+    <div class="two wide column"></div>
+</div>
+{%endblock%}
+
+{%block scripts%}
+{{block.super}}
+<script>
+$('.ui.rating')
+  .rating('disable')
+;
+
+$('.ui.dropdown')
+  .dropdown()
+;
+
+$('.ui.small.modal')
+  .modal('attach events', '.test.button', 'show')
+;
+</script>
+<!--
+<script type="text/javascript" src="{% static 'js/ratings.js' %}"></script>-->
+<script>
+$(document).ready(function(){
+    $('form').submit(function(event){
+        event.preventDefault()
+        
+        form = $("form")
+
+
+        $.ajax({
+            'url':'/ajax/ratings/{{project.id}}/',
+            'type':'POST',
+            'data':form.serialize(),
+            'dataType':'json',
+            'success':function(data){
+                alert(data['success'])
+                location.reload()
+            },
+        }) //End of Ajax
+    }) //End of submit event
+})//End of document ready function
+</script>
+{%endblock%}

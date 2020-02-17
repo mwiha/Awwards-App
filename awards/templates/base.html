@@ -1,0 +1,21 @@
+{% load bootstrap3 %}
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Ranker</title>
+</head>
+<body>
+    {%include 'navbar.html'%}
+    {%block content%} {%endblock%}
+    <!-- Your HTML code -->
+    {%block footer%}
+    <footer>
+        {%include 'footer.html' %}
+    </footer>
+    {%endblock%}
+    {% block scripts %}
+    {%endblock%}
+</body>
+</html>

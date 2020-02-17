@@ -1,0 +1,39 @@
+{%extends 'base.html' %}
+{% load semanticui %}
+{%block content%}
+
+
+<div class="ui equal width form segment" style="margin-top: 100px;">
+    <form action="{% url 'register' %}" method="POST">
+        {%csrf_token%}
+        <div class="fields">
+          <div class="field">
+            {%render_field form.username _icon='user' _align='left' placeholder='Username'%}
+          </div>
+          <div class="field">
+              {%render_field form.password _icon='lock' _align='left' placeholder='Password'%}
+          </div>
+        </div>
+        <div class="fields">
+          <div class="field">
+              {%render_field form.email _icon='mail' _align='left' _required='true' placeholder='Email'%}
+          </div>
+
+          <div class="field">
+              {%render_field form.first_name _icon='user' placeholder='First Name'%}
+          </div>
+          <div class="field">
+                {%render_field form.last_name _icon='user' placeholder='First Name'%}
+          </div>
+        </div>
+        <div style="text-align:center">
+          <button class="ui black button" type="submit">Sign Up</button>
+        </div>
+    </form>
+</div>
+{%endblock%}
+{%block footer%}
+<footer style="position: fixed;bottom: 0; width: 100%;">
+  {%include 'footer.html' %}
+</footer>
+{%endblock%}

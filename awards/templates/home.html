@@ -1,0 +1,82 @@
+{%extends 'base.html'%}
+{%load static%}
+{%block content%}
+<div class="ui inverted menu " style="margin-top: 40px; height: 400px; ">
+  <div class="ui grid">
+    <div class="column" style="padding-top:80px; width: 100%; margin-left: 500px;color: white;">
+      <p style="font-size: 35px;">Welcome to Awwards</p>
+    </div>
+    <div class="column" style="color: white; width: 100%; margin-left: 500px;">
+      {%if user.is_anonymous %}
+      <p style="font-size: 20px;">Sign-up/Sign-in to View.</p>
+      {%else%}
+      <p class="timeRay" style="font-size: 20px; margin-left:150px">Hi, {{user.username}}. </p>
+      {%endif%}
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="ui grid" style="margin-left: 10px;">
+  {%for project in projects %}
+
+    <div class="four wide column">
+    <div class="ui card">
+        <div class="content">
+          <div class="right floated meta">
+            <!-- ADD POSTED DATE -->
+          </div>
+          <img class="ui avatar image" src="{{project.profile.profile_pic.url}}"> 
+          <a href="{% url 'profile' project.profile.user.username %}" style="color: black;">{{project.profile.user.username}}</a>
+        </div>
+        <div class="image" style="background-image: url({{project.project_pic.url}});  
+        background-position:center; background-repeat: no-repeat; background-size: cover;
+        height:200px; cursor: pointer;" onclick="location.href='/project/{{project.id}}'"
+        data-content="Click to view Details.">
+            
+        </div>
+        <div class="content">
+          <p>
+              <span style="font-size: 20px;">Project Name</span>
+              <p>{{project.name}}</p>
+          </p>
+          <span class="right floated" style="margin-top:10px;">
+            <span style="font-size: 20px;">Average Rating</span> 
+            <div style='margin-top: 5px;' class="ui large star rating" data-rating="{{project.average|floatformat:'0'}}" data-max-rating="10"></div>
+          </span>
+        </div>
+    </div>
+    </div>
+  {%endfor%}
+  </div>
+</div>
+
+
+
+
+<style>
+   .popup {
+    color: aqua;
+  }
+</style>
+{%endblock%}
+
+{%block scripts%}
+{{block.super}}
+<script>
+$('.ui.dropdown')
+  .dropdown()
+;
+
+$('.ui.rating')
+  .rating('disable')
+;
+
+$('.image')
+  .popup({
+    inline:true
+  })
+;
+</script>
+{%endblock%}

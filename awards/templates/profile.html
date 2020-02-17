@@ -1,0 +1,229 @@
+{%extends 'base.html' %}
+{%load bootstrap3 %}
+{%block content%}
+<div class="ui internally celled grid" style="margin-top: 90px;">
+  <div class="row">
+    <div class="four wide column" style="position: relative;">
+      <div style="position: absolute;">
+        <div class="ui divided items">
+          <div class="item">
+            <div class="content">
+              <div class="header">Username</div>
+              <div class="meta">
+                <span>{{profile.user.username}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="content">
+              <div class="header">Full Name</div>
+              <div class="meta">
+                <span>{{profile.user.first_name}} {{profile.user.last_name}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="content">
+              <div class="header">Bio</div>
+              <div class="meta">
+                <span>{{profile.bio}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="middle aligned content">
+              <div class="header"> Projects</div>
+              <div class="meta">
+                <span>{{projects|length}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="middle aligned content">
+              <div class="header">Contacts</div>
+              <div class="meta">
+                <span>{{profile.user.email}}</span>
+              </div>
+
+            </div>
+          </div>
+          {%if user == profile.user %}
+          <div class="item">
+            <div class="middle aligned content">
+              <div class="ui left pointing dropdown link item">
+                <div class="header" style="font-weight:bold;font-size: 18px;">Manage Profile<i
+                    class="caret right icon"></i></div>
+
+                <div class="menu" style="background-color: black;">
+                  <div class="item">
+                    <a href="#" class="test button">Add Project</a>
+                  </div>
+                  <div class="item">
+                    <a href="#" class="edit button">Edit Profile</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {%endif%}
+        </div>
+
+
+
+
+
+      </div>
+    </div>
+    {%if user == profile.user %}
+    <div class="eight wide column OpenEditPic" style="background-image: url({{profile.profile_pic.url}});  
+          background-position:center; background-repeat: no-repeat; background-size: cover;
+          height:400px;cursor: pointer;" data-content="Change Profile Picture.">
+
+    </div>
+    {%else%}
+    <div class="eight wide column" style="background-image: url({{profile.profile_pic.url}});  
+          background-position:center; background-repeat: no-repeat; background-size: cover;
+          height:400px;">
+
+    </div>
+    {%endif%}
+
+    <!--OVERALL RATING FOR USER-->
+    <div class="four wide column">
+      <div class="ui divided items">
+        <div class="item">
+          <div class="content">
+            <div class="header" style="margin-left:70px;margin-top:50px;">Overall Rating</div>
+            <p><i class="star icon" style="font-size: 100px; padding-top: 100px;
+                  margin-left: 70px; color:gold"></i></p>
+            <p style="margin-left: 120px;font-size: 30px; font-weight: bold;">{{overall_rating|floatformat:'0'}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row" style="margin-top:100px; padding-left: 140px;">
+
+    {%for project in projects%}
+
+    <div class="four wide column viewDetails" style="background-image: url({{project.project_pic.url}});  
+            background-position:center; background-repeat: no-repeat; background-size: cover;
+            height:200px;margin: 10px; cursor: pointer;" onclick="location.href='/project/{{project.id}}/'"
+      data-content="Click to view Ratings.">
+      <div class="three wide column">
+        <!-- <a class="ui button" href="{%url 'project_details' project.id%}">Details</a> -->
+
+      </div>
+
+    </div>
+
+    {%endfor%}
+
+  </div>
+
+
+  <!--Modal for Uploading user projects  -->
+  <div class="ui modal project">
+    <div class="header">Add a Project</div>
+    <div class="content">
+      <form action="{%url 'project_upload' %}" method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        <!---->
+        <div class="ui form">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" name="name" id="" required>
+          </div>
+          <div class="field">
+            <label>Description</label>
+            <textarea type="text" name="description" id="" required></textarea>
+          </div>
+          <div class="field">
+            <label>Live Link</label>
+            <input type="text" name="link" id="" required>
+          </div>
+          <div class="field">
+            <label>Cover Image</label>
+            <input type="file" name="project_pic" id="" required>
+          </div>
+
+        </div>
+        <button type="submit" class="ui black button">Add to Profile</button>
+      </form>
+
+    </div>
+  </div>
+
+  <!--Modal for Editing User Bio  -->
+  <div class="ui modal edit">
+    <div class="header">Edit Profile</div>
+    <div class="content">
+      <form action="{%url 'profile' profile.user.username %}" method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        <!---->
+        <div class="ui form">
+          <div class="field">
+            {% render_field editForm.bio _required='true'%}
+          </div>
+        </div>
+        <button type="submit" class="ui black button">Edit</button>
+      </form>
+
+    </div>
+  </div>
+  <!--Modal for Editing User Profile Pic  -->
+  <div class="ui modal pic">
+    <div class="header">Change Profile Picture</div>
+    <div class="content">
+      <form action="{%url 'upload_pic' %}" method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        <div class="ui form">
+          <div class="field">
+            <input type="file" name="profile_pic" id="" required>
+          </div>
+        </div>
+        <button type="submit" class="ui black button">Edit</button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+{%endblock%}
+
+
+{%block scripts%}
+{{block.super}}
+<script>
+  $('.ui.dropdown')
+    .dropdown()
+    ;
+
+  $('.ui.rating')
+    .rating()
+    ;
+
+  $('.ui.modal.project')
+    .modal('attach events', '.test.button', 'show')
+    ;
+
+  $('.ui.modal.edit')
+    .modal('attach events', '.edit.button', 'show')
+    ;
+
+  $('.ui.modal.pic')
+    .modal('attach events', '.OpenEditPic', 'show')
+    ;
+
+  $('.OpenEditPic')
+    .popup()
+    ;
+
+  $('.viewDetails')
+    .popup()
+    ;
+</script>
+{%endblock%}
