@@ -3,11 +3,6 @@ from .models import Profile,Project
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-
-
-
-
-
     class Meta:
         model = Project
         fields = ['name','description','design','usability','content','average','project_pic','link','profile_id']
