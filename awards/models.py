@@ -24,31 +24,31 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.bio}'     
 
-# class Project(models.Model):
-#     name = models.CharField(max_length=100)
-#     description = models.TextField()
-#     design = models.IntegerField(default=0,validators=[
-#         MinValueValidator(0),
-#         MaxValueValidator(10)
-#     ])
-#     link = models.URLField(max_length=200,null=True)
-#     usability = models.IntegerField(default=0,
-#     validators=[
-#         MinValueValidator(0),
-#         MaxValueValidator(10)
-#     ])
-#     content = models.IntegerField(default=0,
-#     validators=[
-#         MinValueValidator(0),
-#         MaxValueValidator(10)
-#     ])
-#     average = models.IntegerField(default=0,
-#     validators=[
-#         MinValueValidator(0),
-#         MaxValueValidator(10)
-#     ])
-#     project_pic = models.ImageField(upload_to='project_pic/')
-#     profile = models.ForeignKey(Profile,on_delete=models.CASCADE, related_name='projects')
+class Project(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    design = models.IntegerField(default=0,validators=[
+        MinValueValidator(0),
+        MaxValueValidator(10)
+    ])
+    link = models.URLField(max_length=200,null=True)
+    usability = models.IntegerField(default=0,
+    validators=[
+        MinValueValidator(0),
+        MaxValueValidator(10)
+    ])
+    content = models.IntegerField(default=0,
+    validators=[
+        MinValueValidator(0),
+        MaxValueValidator(10)
+    ])
+    average = models.IntegerField(default=0,
+    validators=[
+        MinValueValidator(0),
+        MaxValueValidator(10)
+    ])
+    project_pic = models.ImageField(upload_to='project_pic/')
+    profile = models.ForeignKey(Profile,on_delete=models.CASCADE, related_name='projects')
     
     @classmethod
     def get_user_projects(cls,profile):
