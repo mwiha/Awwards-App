@@ -1,11 +1,12 @@
 {% load bootstrap3 %}
-{% load static%}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Project Ranker</title>
+    <title>Awwards</title>
 </head>
+
 <body>
     {%include 'navbar.html'%}
     {%block content%} {%endblock%}
@@ -16,6 +17,9 @@
     </footer>
     {%endblock%}
     {% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    {% bootstrap_javascript %}
     {%endblock%}
 </body>
+
 </html>
