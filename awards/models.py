@@ -67,24 +67,24 @@ class Project(models.Model):
         return average
     
     @classmethod
-    def search_projects(cls,search_term):
-        projects = cls.objects.filter(name__icontains = search_term)
-        return projects
+#     def search_projects(cls,search_term):
+#         projects = cls.objects.filter(name__icontains = search_term)
+#         return projects
 
 
-    def __str__(self):
-        return f'{self.name}'
+#     def __str__(self):
+#         return f'{self.name}'
 
-class Voted(models.Model):
-    project = models.ForeignKey(Project,on_delete=models.CASCADE)
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+# class Voted(models.Model):
+#     project = models.ForeignKey(Project,on_delete=models.CASCADE)
+#     user = models.ForeignKey(User,on_delete=models.CASCADE)
 
-    @classmethod
-    def has_user_voted(cls,project,user):
-        if cls.objects.filter(project=project,user=user):
-            return True
-        else:
-            return False
+#     @classmethod
+#     def has_user_voted(cls,project,user):
+#         if cls.objects.filter(project=project,user=user):
+#             return True
+#         else:
+#             return False
     
-    def __unicode__(self):
-        return self.user
+#     def __unicode__(self):
+#         return self.user
