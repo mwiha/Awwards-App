@@ -39,52 +39,52 @@ def register(request):
     return render(request,'auth/registration.html',
     {"form":form})
 
-# def handle_login(request):
-#     if request.method == 'POST':
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             username = form.cleaned_data['username']
-#             password = form.cleaned_data['password']
+def handle_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
 
-#             user = authenticate(username=username, password=password)
-#             if user:
-#                 login(request,user)
-#                 return redirect(home)
-#             else:
-#                 # HANDLE INVALID LOGIN
-#                 print('None')
+            user = authenticate(username=username, password=password)
+            if user:
+                login(request,user)
+                return redirect(home)
+            else:
+                # HANDLE INVALID LOGIN
+                print('None')
 
-#     form = LoginForm()
-#     return render(request,'auth/login.html',{"form":LoginForm})
+    form = LoginForm()
+    return render(request,'auth/login.html',{"form":LoginForm})
 
-# def handle_logout(request):
-#     logout(request)
-#     return redirect(handle_login)
+def handle_logout(request):
+    logout(request)
+    return redirect(handle_login)
 
-# @login_required(login_url='/login') 
-# def user_profile(request,username):
-#     user = User.objects.get(username=username)
-#     profile = Profile.get_user_profile(user)
+@login_required(login_url='/login') 
+def user_profile(request,username):
+    user = User.objects.get(username=username)
+    profile = Profile.get_user_profile(user)
     
-#     if 'bio' in request.POST:
-#         editForm = EditProfile(request.POST)
-#         if editForm.is_valid():
-#             profile.bio = editForm.cleaned_data['bio']
-#             profile.save()
-#             return redirect(user_profile)
+    if 'bio' in request.POST:
+        editForm = EditProfile(request.POST)
+        if editForm.is_valid():
+            profile.bio = editForm.cleaned_data['bio']
+            profile.save()
+            return redirect(user_profile)
 
-#     editForm = EditProfile()
+    editForm = EditProfile()
 
 
-#     form = ProjectForm()
-#     projects = Project.get_user_projects(profile)
-#     overall_rating = Project.get_overall_average(projects)
+    form = ProjectForm()
+    projects = Project.get_user_projects(profile)
+    overall_rating = Project.get_overall_average(projects)
     
 
 
-#     return render(request,'profile.html',{"profile":profile,"form":form,
-#     "projects":projects,"overall_rating":overall_rating,
-#     "editForm":editForm,})
+    return render(request,'profile.html',{"profile":profile,"form":form,
+    "projects":projects,"overall_rating":overall_rating,
+    "editForm":editForm,})
 
 @login_required(login_url='/login') 
 def handle_profile_pic(request):
