@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+
 {% block content %}
 <div class="container">
     <div class="card-body" style="margin-top:90px;">
@@ -8,7 +9,7 @@
         <div class="card-text">
             <form action="" method="post" novalidate>
                 {% csrf_token%}
-                {{ form|crispy}}
+                {% bootstrap_form form %}
                 <button type="submit" class="btn btn-info btn-sm">Login</button>
             </form>
         </div>

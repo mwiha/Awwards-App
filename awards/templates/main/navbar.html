@@ -17,18 +17,23 @@
                 </svg>
 
             </div>
-
-            <div> <strong><a class="text-black" href="{% url 'login' %}">Register / log
-                in</a></strong>
+            {% if user.is_authenticated %}
+            <div style="margin-right: 2%;">
+                <strong><a class="text-black" href="{% url 'logout' %}">Logout</a></strong>
             </div>
-
+            {% else %}
+            <div style="margin-right: 5%;">
+                <strong><a class="text-black"  href="{% url 'login' %}">Login</a></strong>
+            </div>
             <div class="item has-tablet" id="bt-submit">
-                <a href="{% url 'upload'%}" class="button button-small">
+                <a href="{% url 'upload'%}" class="button button-small ">
                     <span>SUBMIT YOUR SITE!</span>
                 </a>
 
             </div>
+            {% endif %}
+
         </div>
-       
+
     </div>
 </header>

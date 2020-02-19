@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from pyuploadcare.dj.forms import ImageField
+from registration.forms import RegistrationForm
 
 from .models import Profile, Project, Rate
 
