@@ -1,28 +1,38 @@
-from django.forms import ModelForm
-from django.contrib.auth.models import User
 from django import forms
-from .models import Project,Profile
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from pyuploadcare.dj.forms import ImageField
+
+from .models import Profile, Project, Rate
 
 
-class RegForm(ModelForm):
+class SignupForm(UserCreationForm):
     class Meta:
-        model = User 
-        fields = ['username','email','password','first_name', 'last_name']
-        widgets = {
-            'password':forms.PasswordInput(),
-        }
+        model = User
+        fields = ["username", "password1", "password2"]
 
-class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput())
 
-class ProjectForm(ModelForm):
+class PostForm(forms.ModelForm):
+    image = ImageField(label='')
+
     class Meta:
         model = Project
-        fields = ['name','description','project_pic','link']
+        fields = ('title', 'details', 'link', 'image')
 
-class EditProfile(ModelForm):
+
+class UpdateUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+
+
+class UpdateUserProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio']
+        fields = ['profile_picture', 'bio', 'contact_info']
 
+
+class RatingsForm(forms.ModelForm):
+    class Meta:
+        model = Rate
+        fields = ['design', 'usability', 'content', 'creativity']

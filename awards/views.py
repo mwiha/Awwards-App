@@ -1,179 +1,151 @@
-from .models import Profile,Project,Voted
-from django.shortcuts import render,redirect
-from django.http import HttpResponse,Http404,HttpResponseRedirect
-import datetime as dt
-# from .forms import NewsLetterForm,NewArticleForm
-# from .email import send_welcome_email
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from . forms import ProjectForm
+from django.shortcuts import render, redirect
 
-# Create your views here.
-def home(request):
-    projects = Project.objects.all()
-    return render(request,'home.html',{"projects":projects})
-
-def register(request):
-    if request.method == 'POST':
-        form = RegForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            email = form.cleaned_data['email']
-            first_name = form.cleaned_data['first_name']            
-            last_name = form.cleaned_data['last_name']
-            
-
-            user = User.objects.create_user(username,email,password)
-            user.first_name = first_name
-            user.last_name = last_name
-            user.save()
-            
-            profile = Profile(user=user,profile_pic='profile_pics/avatar.png')
-            profile.save()
-            return redirect(handle_login)
-
-         
-    form = RegForm()
-    return render(request,'auth/registration.html',
-    {"form":form})
-
-def handle_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-
-            user = authenticate(username=username, password=password)
-            if user:
-                login(request,user)
-                return redirect(home)
-            else:
-                # HANDLE INVALID LOGIN
-                print('None')
-
-    form = LoginForm()
-    return render(request,'auth/login.html',{"form":LoginForm})
-
-def handle_logout(request):
-    logout(request)
-    return redirect(handle_login)
-
-@login_required(login_url='/login') 
-def user_profile(request,username):
-    user = User.objects.get(username=username)
-    profile = Profile.get_user_profile(user)
-    
-    if 'bio' in request.POST:
-        editForm = EditProfile(request.POST)
-        if editForm.is_valid():
-            profile.bio = editForm.cleaned_data['bio']
-            profile.save()
-            return redirect(user_profile)
-
-    editForm = EditProfile()
+from .forms import *
 
 
-    form = ProjectForm()
-    projects = Project.get_user_projects(profile)
-    overall_rating = Project.get_overall_average(projects)
-    
-
-
-    return render(request,'profile.html',{"profile":profile,"form":form,
-    "projects":projects,"overall_rating":overall_rating,
-    "editForm":editForm,})
-
-@login_required(login_url='/login') 
-def handle_profile_pic(request):
-    profile = Profile.get_user_profile(request.user)
-    if request.method == 'POST':
-        pic = request.FILES['profile_pic']
-        profile.profile_pic = pic
-        profile.save()
-    return redirect(user_profile,request.user.username)
-
-
-@login_required(login_url='/login') 
-def handle_project_upload(request):
-    profile = Profile.get_user_profile(request.user)
-
-
-
-
+def index(request):
     if request.method == "POST":
-        name = request.POST['name']
-        description = request.POST['description']
-        link = request.POST['link']
-        pic = request.FILES['project_pic']
-        project = Project(name=name,description=description,project_pic=pic,profile=profile,link=link)
-        project.save()
-        
-
-    return redirect(user_profile,request.user.username)
-
-@login_required(login_url='/login') 
-def project_details(request,project_id):
-    project = Project.objects.get(pk=project_id)
-    has_user_voted = Voted.has_user_voted(project,request.user)
-
-    return render(request,'project-details.html',
-    {"project":project,"has_user_voted":has_user_voted})
-
-@login_required(login_url='/login') 
-def ratings(request,project_id):
-    project = Project.objects.get(pk=project_id)
-    voted = Voted(user=request.user,project=project)
-    voted.save()
-    print(project)
-    
-    design = int(request.POST['design'])
-    usability = int(request.POST['usability'])
-    content = int(request.POST['content'])
-    average = (design + usability + content)/3
-
-
-    if project.design == 0 and project.content == 0 and project.usability == 0: 
-        project.design = design
-        project.usability = usability
-        project.content = content
-        project.average = average
-        project.save()
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.save()
     else:
-        project.design = (project.design + design)/2
-        project.content = (project.content + content)/2
-        project.usability =(project.usability + usability)/2
-        project.average = (project.average  + average)/2
-        project.save()
-    
-    data = {'success':'Rated'}
-    
-    return JsonResponse(data)
+        form = PostForm()
 
-@login_required(login_url='/login') 
-def search_projects(request):
-    search_term = request.GET['search']
-    projects = Project.search_projects(search_term)
-    return render(request, 'search.html',{"projects":projects})
+    try:
+        posts = Project.objects.all()
+        print(posts)
+    except Project.DoesNotExist:
+        posts = None
+    return render(request, 'main/index.html', {'posts': posts, 'form': form})
 
 
+def signup(request):
+    global register_form
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('/')
+    else:
+        form = SignupForm()
+        register_form = {
+            'form': form,
+        }
+    return render(request, 'registration/signup.html', {'form': form})
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from .serializer import ProfileSerializer,ProjectSerializer
 
-class ProfileList(APIView):
-    def get(self,request,format=None):
-        all_profiles = Profile.objects.all()
-        
-        serializers = ProfileSerializer(all_profiles, many=True)
-        return Response(serializers.data)
+@login_required(login_url='login')
+def profile(request, username):
+    return render(request, 'profile/profile.html')
 
-class ProjectList(APIView):
-    def get(self, request, format=None):
-        all_projects = Project.objects.all()
-        serializers = ProjectSerializer(all_projects,many=True)
-        return Response(serializers.data)
+
+@login_required(login_url='login')
+def edit_profile(request, username):
+    user = User.objects.get(username=username)
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        prof_form = UpdateUserProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and prof_form.is_valid():
+            user_form.save()
+            prof_form.save()
+            return redirect('profile', user.username)
+    else:
+        uform = UpdateUserForm(instance=request.user)
+        pform = UpdateUserProfileForm(instance=request.user.profile)
+    params = {
+        'user_form': uform,
+        'prof_form': pform,
+    }
+    return render(request, 'main/edit.html', params)
+
+
+def upload(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.save()
+    else:
+        form = PostForm()
+
+    try:
+        posts = Project.objects.all()
+        print(posts)
+    except Project.DoesNotExist:
+        posts = None
+        return redirect('home')
+    return render(request, 'main/upload.html', {'posts': posts, 'form': form})
+
+
+def home(request):
+    current_user = request.user
+    project_images = Project.fetch_all_images()
+    image_params = {
+        'all_images': project_images,
+        'current_user': current_user,
+    }
+    return render(request, 'main/index.html')
+
+
+def rate(request):
+    ratings = Rate.objects.all()
+    rate_params = {
+        'ratings': ratings
+    }
+
+    return render('main/view_project.html', rate_params)
+
+
+def profile_view(request):
+    profile = Profile.get_profile_data()
+    profile_data = {
+        'profile': profile
+    }
+
+    return render('profile/profile.html', profile_data)
+
+
+def project_view(request, post):
+    post = Project.objects.get(title=post)
+    if request.method == 'POST':
+        form = RatingsForm(request.POST)
+        if form.is_valid():
+            rate = form.save(commit=False)
+            rate.user = request.user
+            rate.post = post
+            rate.save()
+            post_ratings = Rate.objects.filter(post=post)
+
+            design_ratings = [i.design for i in post_ratings]
+            design_average = sum(design_ratings) / len(design_ratings)
+
+            usability_ratings = [i.usability for i in post_ratings]
+            usability_average = sum(usability_ratings) / len(usability_ratings)
+
+            content_ratings = [i.content for i in post_ratings]
+            content_average = sum(content_ratings) / len(content_ratings)
+
+            score = (design_average + usability_average + content_average) / 3
+            rate.design_average = round(design_average, 2)
+            rate.usability_average = round(usability_average, 2)
+            rate.content_average = round(content_average, 2)
+            rate.score = round(score, 2)
+            rate.save()
+
+    else:
+        form = RatingsForm()
+    data = {
+        'post': post,
+        'rating_form': form
+
+    }
+    return render(request, 'main/view_project.html', data)
