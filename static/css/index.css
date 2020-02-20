@@ -1,6 +1,6 @@
 body {
   font-family: "Crimson Text", serif;
-  background-color: #4444;
+  background-color:cornsilk;
 }
 
 .text-muted {
@@ -22,24 +22,3 @@ body {
   text-transform: capitalize;
 }
 
-.des,.des1,.des2,.des3{
-  color:white;
-  border-radius: 50%;
-  height:100px;
-  width: 100px;
-  /* padding-top:20%; */
-  font-size:50px;
-  vertical-align: middle
-}
-.des{
-  border: 3px solid orange;
-}
-.des1{
-  border: 3px solid brown;
-}
-.des2{
-  border: 3px solid blue;
-}
-.des3{
-  border: 3px solid green;
-}
