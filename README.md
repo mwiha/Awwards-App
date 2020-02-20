@@ -76,6 +76,13 @@ If user has no account, they click on `sign up` | User signs up | User is redire
 * HTML
 * Bootstrap
 
+## Known Bugs
+can't be rated based on:
+
+1. Design
+2. Usability
+3. Content
+
 ## contacts
 for more information or questions:
    alicekibe65@gmal.com
