@@ -75,3 +75,10 @@ If user has no account, they click on `sign up` | User signs up | User is redire
 * Django
 * HTML
 * Bootstrap
+
+## contacts
+for more information or questions:
+   alicekibe65@gmal.com
+
+## License
+This project is Licensed under MIT. ©2019 Copyright.
