@@ -84,23 +84,17 @@
         </div>
     </div> -->
 
+    <div class="container-fluid my-5">
+        <div class="col-sm-card col-lg-3 col-sm-1">
+            <div class="card m-1" style="width: 20rem;">
+                <img src="{{project.image.url}}" class="card-img-top" alt="image">
+                <div class="card-body">
+                    <h5 class="card-title">{{project.title}}</h5>
+                    <p class="card-text">{{project.description | safe}}.</p>
 
-
-
-
-
-
-
-
-    <div class="col-sm-12 col-md-6 col-lg-3">
-        <div class="card m-1" style="width: 16rem;">
-            <img src="{{project.image.url}}" class="card-img-top" alt="image">
-            <div class="card-body">
-                <h5 class="card-title">{{project.title}}</h5>
-                <p class="card-text">{{project.description | safe}}.</p>
-
-                {% ratings project %}
-                <a href="{{project.link}}" class="btn btn-primary">see more</a>
+                    {% ratings project %}
+                    <a href="{{project.link}}" class="btn btn-primary">see more</a>
+                </div>
             </div>
         </div>
     </div>
