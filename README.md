@@ -59,3 +59,19 @@ python manage.py makemigrations instagram
 ```
 Open the application on your browser `127.0.0.1:8000`.  
   
+
+## BDD
+| Behavior            | Input                         | Output                        | 
+| ------------------- | ----------------------------- | ----------------------------- |
+| User visits the app and gets directed to the homepage  | User clicks on a project to review | Directed to the login page | 
+If user has no account, they click on `sign up` | User signs up | User is redirected to the log in page |
+|  Single projecct loads | User clicks on vote  | Modal appears where they vote |
+|  Homepage loads | Click `profile` | User's profile appears | 
+| Homepage loads | Click `Submit Project` button | User's redirected to a page where they can upload a project |  
+| Homepage loads | User inputs in the search form and presses enter | Searched results show |
+
+## Technologies Used
+* Python3.6
+* Django
+* HTML
+* Bootstrap
