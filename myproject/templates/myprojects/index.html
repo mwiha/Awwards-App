@@ -7,22 +7,69 @@
 <div class="landing-page">
 
     <div>
-        <p class="text-center" style="color: white;" id="welcome"><b>Welcome to project rating</b></p>
-       
+        <p class="text-center" style="color: white; font-size:xx-large" id="welcome"><b>Welcome to
+                project-rating</b></p>
+
     </div>
     <div class="row">
         <div class="col-md-5"></div>
-        <div class="col-md-2">  <a href="{% url 'newproject'%}" class=" justify-content-center btn btn-sm  btn-info " style="color: white; text-decoration: none;">Submit your Site!</a></div>
+        <div class="col-md-2"> <a href="{% url 'newproject'%}" class=" justify-content-center btn btn-sm  btn-info "
+                style="color: white; text-decoration: none;">Submit your Site!</a></div>
         <div class="col-md-5"></div>
     </div>
-  
-    <div class="row">
-        <span class="col1 col-md-3"></span>
-        <span class="col2 col-md-3"></span>
-        <span class="col3 col-md-3"></span>
-        <span class="col4 col-md-3"></span>
+    <div class="box-notesite js-notes"
+        style="text-align: center ; display: inline-block ; border-radius: 50% ; margin-left:auto">
+        <li class="circle-note-progress style-design" data-note="">
+            <div class="circle">
+                <div class="des">
+                    <p class="d-block mx-auto textrate">9.09</p>
+                </div>
+            </div>
+            <div class="legend">DESIGN</div>
+        </li>
+        <li class="circle-note-progress style-usability" data-note="{{rating.usability_average}}">
+            <div class="circle">
+                <div class="des1">
+                    <p class="d-block mx-auto textrate">7.78</p>
+                </div>
+            </div>
+            <div class="legend">USABILITY</div>
+        </li>
+        <li class="circle-note-progress style-creativity" data-note="{{rating.content_average}}">
+            <div class="circle">
+                <div class="des2">
+                    <p class="d-block mx-auto textrate">5.76</p>
+                </div>
+            </div>
+            <div class="legend">CONTENT</div>
+        </li>
+        <li class="circle-note-progress style-content" data-note="5.65">
+            <div class="circle">
+                <div class="des3">
+                    <p class="d-block mx-auto textrate">12.45</p>
+                </div>
+            </div>
+            <div class="legend">SCORE</div>
+        </li>
+        </ul>
+    </div>
+    <div class="box-bl">
+        <a href="/" data-identifier="laguta-laguta" data-type="submission" class="js-visit-item bt-default green-fill"
+            target="_blank" rel="noopener nofollow">Visit
+            Site</a>
+
+        <strong class="bt-item bt-default js-collect">Collect</strong>
     </div>
 </div>
+
+<div class="row">
+    <span class="col1 col-md-3"></span>
+    <span class="col2 col-md-3"></span>
+    <span class="col3 col-md-3"></span>
+    <span class="col4 col-md-3"></span>
+</div>
+</div>
+
 <div class="row mt-1">
     {% for project in projects %}
     <!-- <div class="col-sm-12 col-md-6 col-lg-3">
@@ -51,17 +98,12 @@
             <div class="card-body">
                 <h5 class="card-title">{{project.title}}</h5>
                 <p class="card-text">{{project.description | safe}}.</p>
-                
+
                 {% ratings project %}
                 <a href="{{project.link}}" class="btn btn-primary">see more</a>
             </div>
         </div>
     </div>
-
-
-
-
-
     <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
     {% endfor %}
 </div>
